@@ -1,0 +1,5 @@
+package lucas.terminiello.backend_tp_integrador.service;
+
+public class LightsService {
+
+}

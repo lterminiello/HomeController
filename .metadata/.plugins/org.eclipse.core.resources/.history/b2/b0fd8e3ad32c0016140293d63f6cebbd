@@ -1,0 +1,24 @@
+package lucas.terminiello.backend_tp_integrador.service;
+
+import org.python.core.PyInstance;
+import org.python.util.PythonInterpreter;
+
+public class LightsService {
+
+	private PyInstance createClass(PythonInterpreter interpreter, final String className, final String opts) {
+		return (PyInstance) interpreter.eval(className + "(" + opts + ")");
+	}
+
+	public String kitchenLight() {
+		PythonInterpreter interpreter = new PythonInterpreter();
+		interpreter.execfile("hello.py");
+		PyInstance hello = this.createClass(interpreter, "Hello", "Hello");
+		hello.invoke("holi");
+		return "";
+	}
+
+	public static void main(String[] args) {
+		LightsService lightsService= new LightsService();
+		lightsService.kitchenLight();
+	}
+}
