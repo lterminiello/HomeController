@@ -1,0 +1,64 @@
+package lucas.terminiello.backend_tp_integrador.service;
+
+import java.io.File;
+import java.util.Properties;
+
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
+
+public class LightsService {
+
+	//PyInstance lights;
+	final GpioController gpio = GpioFactory.getInstance();
+    final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.LOW);
+
+
+	public LightsService() {
+		super();
+		//this.init();
+	}
+
+//	public void init() {
+//		Properties props = new Properties();
+//		props.put("python.home","/usr/lib/python2.7");
+//		props.put("python.console.encoding", "UTF-8"); // Used to prevent: console: Failed to install '': java.nio.charset.UnsupportedCharsetException: cp0.
+//		props.put("python.security.respectJavaAccessibility", "false"); //don't respect java accessibility, so that we can access protected members on subclasses
+//		props.put("python.import.site","false");
+//		Properties preprops = System.getProperties();
+//		PythonInterpreter.initialize(preprops, props, new String[0]);
+//		PythonInterpreter interpreter = new PythonInterpreter();
+//		interpreter.execfile("lights.py");
+//		lights = this.createClass(interpreter, "Lights", "Lights");
+//	}
+
+//	private PyInstance createClass(PythonInterpreter interpreter, final String className, final String opts) {
+//		return (PyInstance) interpreter.eval(className + "(" + opts + ")");
+//	}
+
+	public String kitchenLight() {
+		//return lights.invoke("cocina").toString();
+		if(pin.isLow()){
+			pin.high();
+			return "on";
+		}else{
+			pin.low();
+			return "off";
+		}
+	}
+
+	public String bedroomLight(int power) {
+		//return lights.invoke("habitacion", new PyInteger(power)).toString();
+		return null;
+
+	}
+
+	public static void main(String[] args) {
+		 //LightsService lightsService = new LightsService();
+		 //System.out.println(lightsService.kitchenLight());
+		// System.out.println(lightsService.bedroomLight(50));
+		//System.out.println (new File("").getAbsolutePath ());
+	}
+}

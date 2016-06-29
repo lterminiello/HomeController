@@ -9,8 +9,15 @@
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	<bean id="jsonFactory"
 		class="lucas.terminiello.backend_tp_integrador.json.JsonFactory" />
+
+
+	<bean id="lightsService"
+		class="lucas.terminiello.backend_tp_integrador.service.LightsService" />
+
+
 	<bean id="homeController"
 		class="lucas.terminiello.backend_tp_integrador.controller.HomeController">
+		<constructor-arg ref="lightsService" />
 	</bean>
 
 	<bean id="webConfig" class="lucas.terminiello.backend_tp_integrador.WebConfig">

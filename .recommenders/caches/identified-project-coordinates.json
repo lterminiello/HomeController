@@ -1,1 +1,1 @@
-[[{"location":"/home/lucasterminiello/HomeController/ServerRaspberry","type":"PROJECT","hints":{"PROJECT_NAME":"ServerRaspberry"}},"lucas.terminiello:backend-tp-integrador:0.0.1"]]
+[[{"location":"/usr/lib/jvm/java-7-openjdk-amd64","type":"JRE","hints":{"EXECUTION_ENVIRONMENT":"JavaSE-1.7"}},"jre:jre:1.7.0"],[{"location":"/home/default/.m2/repository/com/pi4j/pi4j-core/1.0/pi4j-core-1.0.jar","type":"JAR","hints":{}},"com.pi4j:pi4j-core:1.0.0"]]

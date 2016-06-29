@@ -12,58 +12,76 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lucas.terminiello.backend_tp_integrador.model.Lights;
+import lucas.terminiello.backend_tp_integrador.service.LightsService;
+
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/lights")
 public class HomeController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-	public HomeController() {
+	private LightsService lightsService;
+
+	public HomeController(LightsService lightsService) {
 		super();
+		this.lightsService = lightsService;
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/kichent", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> genereteBestTrip(@RequestParam(value = "state", required = true) Integer state) {
+	public ResponseEntity<Lights> lightsKichent() {
+		Lights response = lightsService.kitchenLight();
+		LOGGER.info(response.toString());
+		return new ResponseEntity<Lights>((response), HttpStatus.ACCEPTED);
+	}
 
-		if (state < 2 && state >= 0) {
-			Process p;
-			String s = "";
-			try {
-				String[] cmd = { "python", "ledtest.py", state.toString() };
-				p = Runtime.getRuntime().exec(cmd);
-				BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-				s = br.readLine();
-				LOGGER.info(s);
-				p.destroy();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return new ResponseEntity<String>((s), HttpStatus.ACCEPTED);
+	@RequestMapping(value = "/bedroom", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Lights> genereteBestTrip(@RequestParam(value = "power", required = true) Integer power) {
+
+		if (power <= 10 && power >= 0) {
+			Lights response = lightsService.bedroomLight(power * 100);
+			LOGGER.info(response.toString());
+			return new ResponseEntity<Lights>((response), HttpStatus.ACCEPTED);
 		} else {
-			return new ResponseEntity<String>(("Debe ingresar 1 para encender o 0 para apagar"),
-					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Lights>( HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	// @RequestMapping(method = RequestMethod.GET)
+	// @ResponseBody
+	// public ResponseEntity<String> genereteBestTrip(@RequestParam(value =
+	// "state", required = true) Integer state) {
+	//
+	// if (state < 2 && state >= 0) {
+	// Process p;
+	// String s = "";
+	// try {
+	// String[] cmd = { "python", "ledtest.py", state.toString() };
+	// p = Runtime.getRuntime().exec(cmd);
+	// BufferedReader br = new BufferedReader(new
+	// InputStreamReader(p.getInputStream()));
+	// s = br.readLine();
+	// LOGGER.info(s);
+	// p.destroy();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// return new ResponseEntity<String>((s), HttpStatus.ACCEPTED);
+	// } else {
+	// return new ResponseEntity<String>(("Debe ingresar 1 para encender o 0
+	// para apagar"),
+	// HttpStatus.BAD_REQUEST);
+	// }
+	// }
 
 	@RequestMapping(value = "/status", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<String> generateBranch() {
-
-		Process p;
-		String s = "";
-		try {
-			String[] cmd = { "python", "HomeStatus.py"};
-			p = Runtime.getRuntime().exec(cmd);
-			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			s = br.readLine();
-			LOGGER.info(s);
-			p.destroy();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<String>((s), HttpStatus.ACCEPTED);
-
+	public ResponseEntity<Lights> generateBranch() {
+		Lights response = lightsService.statusLights();
+		LOGGER.info(response.toString());
+		return new ResponseEntity<Lights>((response), HttpStatus.ACCEPTED);
 	}
 
 	// @RequestMapping(method = RequestMethod.GET)

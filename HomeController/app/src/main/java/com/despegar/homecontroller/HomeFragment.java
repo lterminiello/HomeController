@@ -1,35 +1,31 @@
 package com.despegar.homecontroller;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.despegar.homecontroller.com.despegar.homecontroller.model.Lights;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class HomeFragment extends Fragment implements listenerFragmen{
 
-    private RaspberryServiceTask raspberryServiceTask;
+    private RaspberryServiceLightsTask raspberryServiceLightsTask;
     private HomeFragment yo;
     private ImageButton imgLamp;
     private EditText editIp;
+    private SeekBar seekBar;
+    private TextView powerView;
 
 
 
@@ -50,14 +46,34 @@ public class HomeFragment extends Fragment implements listenerFragmen{
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         imgLamp = (ImageButton) v.findViewById(R.id.imgLamp);
+        seekBar = (SeekBar) v.findViewById(R.id.seekBarLed);
+        powerView = (TextView) v.findViewById(R.id.powerView);
         yo = this;
 
         editIp = (EditText) v.findViewById(R.id.editIp);
         imgLamp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                raspberryServiceTask =  new RaspberryServiceTask(yo);
-                raspberryServiceTask.execute("http://"+editIp.getText().toString()+":8080/home?state=0");
+                raspberryServiceLightsTask =  new RaspberryServiceLightsTask(yo);
+                raspberryServiceLightsTask.execute("http://"+editIp.getText().toString()+":8080/lights/kichent");
+            }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                raspberryServiceLightsTask =  new RaspberryServiceLightsTask(yo);
+                raspberryServiceLightsTask.execute("http://"+editIp.getText().toString()+":8080/lights/bedroom?power="+progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
         callAsynchronousTask();
@@ -65,20 +81,22 @@ public class HomeFragment extends Fragment implements listenerFragmen{
     }
 
     @Override
-    public void onFinish(String status) {
-        raspberryServiceTask.cancel(true);
+    public void onFinish(Lights status) {
+        raspberryServiceLightsTask.cancel(true);
         updateStatusServer(status);
-        Toast t = Toast.makeText(getContext(),status,Toast.LENGTH_LONG);
-        t.show();
     }
 
     @Override
-    public void updateStatusServer(String status) {
-        if(status != null && status.equals("\"on\"")){
-            imgLamp.setImageResource(R.drawable.on_lightbulb);
-        }else{
-            imgLamp.setImageResource(R.drawable.off_lightbulb);
+    public void updateStatusServer(Lights status) {
+        if(status != null) {
+            if (status.getKichent().equals("HIGH")) {
+                imgLamp.setImageResource(R.drawable.on_lightbulb);
+            } else {
+                imgLamp.setImageResource(R.drawable.off_lightbulb);
+            }
+            powerView.setText(status.getBedroom() / 10 + "%");
         }
+
     }
 
     public void callAsynchronousTask() {
@@ -93,7 +111,7 @@ public class HomeFragment extends Fragment implements listenerFragmen{
                     public void run() {
                         try {
                             RaspberryStatusTask raspberryStatusTask = new RaspberryStatusTask(yo);
-                            raspberryStatusTask.execute("http://"+editIp.getText().toString()+":8080/home/status");
+                            raspberryStatusTask.execute("http://"+editIp.getText().toString()+":8080/lights/status");
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
                         }

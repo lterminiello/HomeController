@@ -3,6 +3,10 @@ package com.despegar.homecontroller;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.despegar.homecontroller.com.despegar.homecontroller.model.Lights;
+import com.despegar.homecontroller.com.despegar.homecontroller.utils.JsonFactory;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RaspberryStatusTask extends AsyncTask<String, Void, String> {
+public class RaspberryStatusTask extends AsyncTask<String, Void, Lights> {
 
 
     private listenerFragmen listenerFragmen;
@@ -25,14 +29,14 @@ public class RaspberryStatusTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String string) {
-        super.onPostExecute(string);
+    protected void onPostExecute(Lights lights) {
+        super.onPostExecute(lights);
 
-        listenerFragmen.updateStatusServer(string);
+        listenerFragmen.updateStatusServer(lights);
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected Lights doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         try {
             Log.e("--->",params[0] );
@@ -43,9 +47,10 @@ public class RaspberryStatusTask extends AsyncTask<String, Void, String> {
 
             InputStream inputStream = urlConnection.getInputStream();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-            String s = br.readLine();
-            return s;
+            JsonFactory jsonFactory = new JsonFactory();
+
+            return jsonFactory.fromJson(new InputStreamReader(inputStream), new TypeReference<Lights>() {
+            });
 
         } catch (IOException e) {
             return null;

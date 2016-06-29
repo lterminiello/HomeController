@@ -3,4 +3,13 @@
 <fullyQualifiedTypeName name="org.python.util.PythonInterpreter"/>
 <fullyQualifiedTypeName name="org.python.core.PyInstance"/>
 <fullyQualifiedTypeName name="lucas.terminiello.backend_tp_integrador.service.LightsService"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioController"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioFactory"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioPinDigitalOutput"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.PinState"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioPinAnalogOutput"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.RaspiPin"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioPinPwm"/>
+<fullyQualifiedTypeName name="com.pi4j.io.gpio.GpioPinPwmOutput"/>
 </qualifiedTypeNameHistroy>
